@@ -37,6 +37,7 @@ void PrintEventMsg(EventMsg_t * event)
 }
 
 
+
 void SerialParserThread(void *pvParameters)
 {
 #if SERIAL_EN  
@@ -84,8 +85,9 @@ void SerialParserThread(void *pvParameters)
             /* Line ending occured, parsed the data */
             uart_buffer[uart_buffer_idx] = '\0';    /* NULL terminate the string */
 
-
+#if SERIAL_PARSER_DEBUG
             Serial.print("["); Serial.print(uart_buffer); Serial.println("]");
+#endif 
             /* Parse UART buffer and make a EventMsg to post to Motor Controller thread */
             event_msg = mySerialParser->ParseSerialInput(uart_buffer, event_msg);
 

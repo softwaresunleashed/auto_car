@@ -10,7 +10,7 @@
 
 /* UART Defines */
 #define BAUDRATE            115200
-#define UART_BUFFER_LEN     20
+#define UART_BUFFER_LEN     50      /* Fix : In some cases when corrupted line is recieved on a serial connection, its lenght is 20+, so keeping a safe value */
 
 /* FreeRTOS */
 #define SERIALPARSER_THRD_STACK_SIZE   150   //128

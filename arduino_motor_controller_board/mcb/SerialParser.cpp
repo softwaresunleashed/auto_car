@@ -10,11 +10,11 @@
 #include "event_msg.h"
 #include "global_defs.h"
 #include "utils.h"
+#include "configuration.h"
 #include "SerialParser.h"
 
 
-#define TOKEN_STRING    10
-static char token[TOKEN_STRING];
+static char token[UART_BUFFER_LEN];
 
 
 /* Constructor */
