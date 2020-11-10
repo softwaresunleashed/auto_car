@@ -1,7 +1,7 @@
 #ifndef __TAGS_H_
 #define __TAGS_H_
 
-
+/* Lenght of TAGS spitted out from ESP32 */
 #define TAG_LENGTH        3
 
 /* Tags go here */
@@ -23,7 +23,7 @@ typedef enum {
 }eBattStatus;
 
 /* Delimiters used in Serial Parser */
-#define DELIMITER_TAG_INDEX    3    /* 4th character should be tag delimiter else packet is malformed */
+#define DELIMITER_TAG_INDEX    TAG_LENGTH    /* The next character to TAG_LENGTH should be tag delimiter else packet is malformed */
 #define DELIMITER_TAG          ':'
 #define DELIMITER_COORDINATE   ','
 #define DELIMITER_SPACE        ' '

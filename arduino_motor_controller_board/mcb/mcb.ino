@@ -10,32 +10,42 @@
 /* Developer defined header files go here */
 #include "configuration.h"
 #include "global_defs.h"
+
+
+
+
+/*================================================Serial Parser================================================*/
 #include "SerialParser.h"
 
 /* Global Variables */
 SoftwareSerial BtSoftwareSerial(ARDUINO_RX_PIN, ARDUINO_TX_PIN); // RX, TX
 
-
 void PrintEventMsg(EventMsg_t * event)
 {
     switch (event->event_type) {
         case KT_BATT_STATUS:
-            Serial.print("Battery Level = "); Serial.println(event->more.battery.batt_lvl);
+            Serial.print("Battery Level = "); 
+            Serial.println(event->more.battery.batt_lvl);
             break;
         case KT_LEFT_JOYSTICK:
-            Serial.print("JoyStick (Left) x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
+            Serial.print("JoyStick (Left) x = "); 
+            Serial.print(event->more.coordinate.x); 
+            Serial.print(" y = "); 
+            Serial.println(event->more.coordinate.y);
             break;
         case KT_RIGHT_JOYSTICK:
-            Serial.print("JoyStick (Right) x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
+            Serial.print("JoyStick (Right) x = ");
+            Serial.print(event->more.coordinate.x);
+            Serial.print(" y = ");
+            Serial.println(event->more.coordinate.y);
             break;
         case KT_NONE:    
         default:
             /* No valid tag found, simply skip */
-            Serial.println("Invalid Serial Packet Received");
+            Serial.println("Invalid Packet");
             break;
     };
 }
-
 
 void SerialParserThread(void *pvParameters)
 {
@@ -52,20 +62,20 @@ void SerialParserThread(void *pvParameters)
 
   /* Get Singleton instance of Serial Parser */
   SerialParser *mySerialParser = SerialParser::getInstance();
-  
+
   /* Thread Loop */
   while(1)
   {
     char read_char = 0;
-
+    
     /* Start with a clean event - everytime!! */
     memset(event_msg, 0, sizeof(EventMsg_t));
+
     
     /* If there is something to read on BT Serial Port, print it on serial port */
     if(BtSoftwareSerial.available())
     {
       read_char = BtSoftwareSerial.read();
-
       switch (read_char) {
             case CR:        /* Simply skip \r character */
                 break;
@@ -113,12 +123,9 @@ void SerialParserThread(void *pvParameters)
             /* TODO : Delete event_msg after consuming in Motor Controller code */
             //delete event_msg;
         }
-
-      
     } /* if(BtSoftwareSerial.available()) ends */
   };  /* while(1) ends */
 }
-
 
 void initSerialParserThread()
 {
@@ -132,12 +139,88 @@ void initSerialParserThread()
   Serial.println("[Done]");
 #endif  
 }
+/*------------------------------------------------------------------------------------------------------------*/
+
+
+/*================================================Wheel Driver================================================*/
+#include "WheelDriver.h"
+#include "global_queue.h"
+
+/* Global Variables */
+
+
+void WheelDriverThread(void *pvParameters)
+{
+#if SERIAL_EN  
+  Serial.println("[WD] Starting Wheel Driver Thread...");
+#endif
+
+  /* Create Queue and wait on it */
+  xKeyEventQueue = xQueueCreate( KEY_EVENT_QUEUE_LEN, sizeof( EventMsg_t ) );
+  if( xKeyEventQueue == 0 )
+  {
+    // Queue was not created and must not be used.
+    #if SERIAL_EN  
+      Serial.println("[WD] [Err] Queue couldn't be created...Halting WheelDriver Thread.");
+    #endif
+  
+    return;
+  }
+
+  /* Get Singleton instance of Wheel Driver */
+  WheelDriver *myWheelDriver = WheelDriver::getInstance();
+  myWheelDriver->InitMotorSpeeds();
+  
+  /* Consumer Thread Loop */
+  while(1)
+  {
+
+    /* Wait on a queue and get the event msg */
+
+
+    /* Send commands to WheelDriver to move vehicle as per input */
+    Serial.println("[WD] Move Wheels Forward...");
+    myWheelDriver->MoveForward();
+
+    delay(2000);
+
+    Serial.println("[WD] Move Wheels Backward...");
+    myWheelDriver->MoveBackward();
+
+    delay(2000);
+  
+    Serial.println("[WD] Move Wheels Left...");
+    myWheelDriver->MoveLeft();
+
+    delay(2000);
+
+    Serial.println("[WD] Move Wheels Right...");
+    myWheelDriver->MoveRight();
+
+    delay(2000);
+  };  /* while(1) ends */
+}
+
+
+void initWheelDriverThread()
+{
+#if SERIAL_EN
+  Serial.print("Creating Wheel Driver Task...");
+#endif
+
+  xTaskCreate(WheelDriverThread, "Wheel Driver Thread", WHEELDRIVER_THRD_STACK_SIZE, NULL, 1, NULL);
+
+#if SERIAL_EN
+  Serial.println("[Done]");
+#endif  
+}
+/*------------------------------------------------------------------------------------------------------------*/
 
 void createSystemThreads()
 {
   
   initSerialParserThread();   /* Serial Parser Thread */
-  
+  //initWheelDriverThread();    /* Wheel Driver Thread */
 }
 
 
