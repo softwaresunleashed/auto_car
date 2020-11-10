@@ -18,7 +18,6 @@ SoftwareSerial BtSoftwareSerial(ARDUINO_RX_PIN, ARDUINO_TX_PIN); // RX, TX
 
 void PrintEventMsg(EventMsg_t * event)
 {
-#if SERIAL_PARSER_DEBUG
     switch (event->event_type) {
         case KT_BATT_STATUS:
             Serial.print("Battery Level = "); Serial.println(event->more.battery.batt_lvl);
@@ -35,9 +34,7 @@ void PrintEventMsg(EventMsg_t * event)
             Serial.println("Invalid Serial Packet Received");
             break;
     };
-#endif
 }
-
 
 
 void SerialParserThread(void *pvParameters)
