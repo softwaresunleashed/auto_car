@@ -100,7 +100,7 @@ EventMsg_t * SerialParser::GetBatteryLevel(char *SerialInput, EventMsg_t *Event)
     /* Check if Tag Delimiter is intact */
     if(SerialInput[DELIMITER_TAG_INDEX] != DELIMITER_TAG)
     {
-        Event = NULL;
+        Event->event_type = KT_NONE;
         goto ret;
     }
 
@@ -111,7 +111,7 @@ EventMsg_t * SerialParser::GetBatteryLevel(char *SerialInput, EventMsg_t *Event)
             Event->more.battery.batt_lvl >= BATT_MAX_ENTRIES)
     {
         /* Not In Valid Range */
-        Event = NULL;
+        Event->event_type = KT_NONE;
         goto ret;
     }
 
@@ -127,7 +127,7 @@ EventMsg_t * SerialParser::GetCoOrdinates(char *SerialInput, EventMsg_t *Event)
     /* Check if Tag Delimiter is intact */
     if(SerialInput[DELIMITER_TAG_INDEX] != DELIMITER_TAG)
     {
-        Event = NULL;
+        Event->event_type = KT_NONE;
         goto ret;
     }
 
@@ -141,7 +141,7 @@ EventMsg_t * SerialParser::GetCoOrdinates(char *SerialInput, EventMsg_t *Event)
             Event->more.coordinate.x > MAX_VALUE_JOYSTICK)
     {
         /* Not In Valid Range */
-        Event = NULL;
+        Event->event_type = KT_NONE;
         goto ret;
     }
 
@@ -154,7 +154,7 @@ EventMsg_t * SerialParser::GetCoOrdinates(char *SerialInput, EventMsg_t *Event)
             Event->more.coordinate.y > MAX_VALUE_JOYSTICK)
     {
         /* Not In Valid Range */
-        Event = NULL;
+        Event->event_type = KT_NONE;
         goto ret;
     }
 

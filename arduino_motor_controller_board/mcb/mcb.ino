@@ -24,13 +24,15 @@ void PrintEventMsg(EventMsg_t * event)
             Serial.print("Battery Level = "); Serial.println(event->more.battery.batt_lvl);
             break;
         case KT_LEFT_JOYSTICK:
-            Serial.print("Left JS x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
+            Serial.print("JoyStick (Left) x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
             break;
         case KT_RIGHT_JOYSTICK:
-            Serial.print("Right JS x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
+            Serial.print("JoyStick (Right) x = "); Serial.print(event->more.coordinate.x); Serial.print(" y = "); Serial.println(event->more.coordinate.y);
             break;
+        case KT_NONE:    
         default:
             /* No valid tag found, simply skip */
+            Serial.println("Invalid Serial Packet Received");
             break;
     };
 #endif
@@ -102,8 +104,7 @@ void SerialParserThread(void *pvParameters)
 #endif 
 
             /* Push JoyStick Events to Queues */
-            if(event_msg != NULL
-               && event_msg->event_type != KT_NONE)
+            if(event_msg != NULL)
             {
                 PrintEventMsg(event_msg);
             }
