@@ -1,13 +1,28 @@
-/* Need to define functions in extern C within Arduiino IDE to
-compile functions spanning multiple files 
-*/
+#include "key_events.h"
+#include "event_msg.h"
+
+
 
 class SerialParser{
 
+private:
+    SerialParser();
+    ~SerialParser();
+
+    static SerialParser *instance;
+
+    char * GetToken(char *StringInput);
+    eKeyType ConvertTagToKeyType(char *Tag);
+    EventMsg_t * GetCoOrdinates(char *SerialInput, EventMsg_t *Event);
+    EventMsg_t * GetBatteryLevel(char *SerialInput, EventMsg_t *Event);
+
+
 public:
-  SerialParser();
-  ~SerialParser();
-  
-  int ParseSerialInput(char *SerialInput);
-  
+    static SerialParser * getInstance() {
+        if (!instance)
+            instance = new SerialParser;
+        return instance;
+    }
+
+    EventMsg_t * ParseSerialInput(char *SerialInput, EventMsg_t *Event);
 };
