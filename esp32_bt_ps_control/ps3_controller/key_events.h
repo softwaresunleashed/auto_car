@@ -1,26 +1,25 @@
+#ifndef __KEY_EVENTS_H_
+#define __KEY_EVENTS_H_
 
-
-#define UP  "U"
-#define DN  "D"
-#define LF  "L"
-#define RT  "R"
-
-#define ACCL "A"
-#define BRK  "B"
-
-
-
-#define BTN_CROSS_PRESS
-#define BTN_CROSS_RELEASE   
 
 
 typedef enum {
-  
+    KT_NONE,
 
-}key_events;
+    KT_BATT_STATUS,
+    KT_LEFT_JOYSTICK,
+    KT_RIGHT_JOYSTICK,
+
+    KT_MAX
+}eKeyType;
+
+typedef enum {
 
 
+}eKeyEvents;
 
+
+#endif    /* __KEY_EVENTS_H_ */
 
 /*
 void notify()

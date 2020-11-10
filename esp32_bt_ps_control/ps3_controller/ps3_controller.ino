@@ -1,29 +1,11 @@
 #include <Ps3Controller.h>
 #include "key_events.h"
-
-
-/* Defines go here */
-#define BATT_STATUS       "BATT_LVL"
-#define LEFT_JOYSTICK     "LJS"
-#define RIGHT_JOYSTICK    "RJS"
-
-
-/* Battery Status Defines */
-#define BATT_CHARGING     "CHARGING"
-#define BATT_FULL         "FULL"
-#define BATT_HIGH         "HIGH"
-#define BATT_LOW          "LOW"
-#define BATT_DYING        "DYING"
-#define BATT_SHUTDOWN     "SHUTDOWN"
-#define BATT_UNDEFINED    "UNDEFINED"
+#include "configuration.h"
+#include "tags.h"
 
 
 /* BT MAC Address of ESP Devices */
 #define BT_HOST_DEVICE_MAC_ADDR   "01:02:03:04:05:06"
-
-/* UART Baud Rate */
-#define BAUD_RATE         115200
-
 
 
 /* Global Variables */
@@ -71,7 +53,7 @@ void notify()
         else if( battery == ps3_status_battery_low)       Serial.println( BATT_LOW );
         else if( battery == ps3_status_battery_dying )    Serial.println( BATT_DYING );
         else if( battery == ps3_status_battery_shutdown ) Serial.println( BATT_SHUTDOWN );
-        else Serial.println( BATT_UNDEFINED );
+        else Serial.println(BATT_UNDEFINED);
     }
 
 }
@@ -83,7 +65,7 @@ void onConnect(){
 
 void setup()
 {   
-    Serial.begin(BAUD_RATE);
+    Serial.begin(BAUDRATE);
 
     Ps3.attach(notify);
     Ps3.attachOnConnect(onConnect);
