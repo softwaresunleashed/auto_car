@@ -21,6 +21,6 @@
 #define MOTOR_CONTROL_EN    0
 #define OLED_SUPPORTED      0
 #define PROXIMITY_RADAR_EN  0
-#define SERIAL_PARSER_DEBUG 1
+#define SERIAL_PARSER_DEBUG 0
 
 #endif  /* __CONFIGURATION_H_ */
