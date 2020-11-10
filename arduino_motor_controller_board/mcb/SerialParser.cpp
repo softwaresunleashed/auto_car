@@ -1,7 +1,4 @@
 /* System Defined Header Files */
-#include <stdio.h>
-#include <string.h>
-
 #include <SoftwareSerial.h>
 
 /* Developer Defined Header Files */
