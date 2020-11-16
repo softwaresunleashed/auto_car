@@ -23,6 +23,7 @@ typedef struct{
 
         struct {
             int is_pressed;
+            int analog_val;
         } key;
     } more;
 

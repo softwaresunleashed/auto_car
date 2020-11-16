@@ -13,9 +13,10 @@ private:
 
     char * GetToken(char *StringInput);
     eKeyType ConvertTagToKeyType(char *Tag);
+    
     EventMsg_t * GetCoOrdinates(char *SerialInput, EventMsg_t *Event);
     EventMsg_t * GetBatteryLevel(char *SerialInput, EventMsg_t *Event);
-
+    EventMsg_t * GetKeyAnalogValue(char *SerialInput, EventMsg_t *Event);
 
 public:
     static SerialParser * getInstance() {
@@ -25,4 +26,5 @@ public:
     }
 
     EventMsg_t * ParseSerialInput(char *SerialInput, EventMsg_t *Event);
+    char * SerialParser::ConvertKeyTypeToTag(eKeyType KeyType);
 };

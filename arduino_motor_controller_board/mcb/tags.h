@@ -65,4 +65,7 @@ typedef enum {
 #define DELIMITER_ANALOG_VAL   ','
 #define DELIMITER_SPACE        ' '
 
+
+#define KEYTYPE_NONE            "KT_NONE"
+
 #endif    /* __TAGS_H_ */

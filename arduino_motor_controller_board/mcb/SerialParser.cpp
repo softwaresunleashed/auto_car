@@ -26,11 +26,29 @@ SerialParser::~SerialParser(){
 
 SerialParser *SerialParser::instance = 0;
 
+
 /* Add Tag To KeyType mapping */
 static TagToKeyType_t lookuptable[] = {
-    { BATT_STATUS,    KT_BATT_STATUS    },
-    { LEFT_JOYSTICK,  KT_LEFT_JOYSTICK  },
-    { RIGHT_JOYSTICK, KT_RIGHT_JOYSTICK },
+    { BATT_STATUS,      KT_BATT_STATUS    },
+    { LEFT_JOYSTICK,    KT_LEFT_JOYSTICK  },
+    { RIGHT_JOYSTICK,   KT_RIGHT_JOYSTICK },
+    { CROSS_BTN,        KT_CROSS_BTN },
+    { SQUARE_BTN,       KT_SQUARE_BTN },
+    { TRIANGLE_BTN,     KT_TRIANGLE_BTN },
+    { CIRCLE_BTN,       KT_CIRCLE_BTN },
+    { UP_BTN,           KT_UP_BTN },
+    { DOWN_BTN,         KT_DOWN_BTN },
+    { LEFT_BTN,         KT_LEFT_BTN },
+    { RIGHT_BTN,        KT_RIGHT_BTN },
+    { SHOULDER_BTN_L1,  KT_SHOULDER_BTN_L1 },
+    { SHOULDER_BTN_R1,  KT_SHOULDER_BTN_R1 },
+    { SHOULDER_BTN_L2,  KT_SHOULDER_BTN_L2 },
+    { SHOULDER_BTN_R2,  KT_SHOULDER_BTN_R2 },
+    { SHOULDER_BTN_L3,  KT_SHOULDER_BTN_L3 },
+    { SHOULDER_BTN_R3,  KT_SHOULDER_BTN_R3 },
+    { SELECT_BTN,       KT_SELECT_BTN },
+    { START_BTN,        KT_START_BTN },
+    { PS_BTN,           KT_PS_BTN },
 };
 
 
@@ -47,6 +65,18 @@ eKeyType SerialParser::ConvertTagToKeyType(char *Tag)
         }
     }
     return KT_NONE;
+}
+
+/* Converts KeyType to Tag */
+char * SerialParser::ConvertKeyTypeToTag(eKeyType KeyType)
+{
+    for ( int idx = 0; idx < NKEYS; idx++ ) {
+        TagToKeyType_t *sym = &lookuptable[idx];
+        if ( sym->val == KeyType ) {
+            return sym->key;
+        }
+    }
+    return KEYTYPE_NONE;
 }
 
 
@@ -159,6 +189,42 @@ ret:
     return Event;
 }
 
+EventMsg_t * SerialParser::GetKeyAnalogValue(char *SerialInput, EventMsg_t *Event)
+{
+    int i = 0;
+    char *token = NULL;
+
+    /* Check if Tag Delimiter is intact */
+    if(SerialInput[DELIMITER_TAG_INDEX] != DELIMITER_TAG)
+    {
+        Event->event_type = KT_NONE;
+        goto ret;
+    }
+
+    /* Move to beginning of Key Press Release */
+    while(SerialInput[i] != DELIMITER_TAG)
+        i++;
+
+    token = GetToken(&SerialInput[i]);
+    Event->more.key.is_pressed = ATOI(token);
+
+    /* Move to beginning of Key Analog Value */
+    while(SerialInput[i] != DELIMITER_ANALOG_VAL)
+        i++;
+    token = GetToken(&SerialInput[i]);
+    Event->more.key.analog_val = ATOI(token);
+    if(Event->more.key.analog_val < MIN_ANALOG_VALUE ||
+            Event->more.key.analog_val > MAX_ANALOG_VALUE)
+    {
+        /* Not In Valid Range */
+        Event->event_type = KT_NONE;
+        goto ret;
+    }
+
+ret:
+    return Event;
+}
+
 /* Parse Input received from Software Serial Port */
 EventMsg_t * SerialParser::ParseSerialInput(char *SerialInput, EventMsg_t *Event)
 {
@@ -189,6 +255,74 @@ EventMsg_t * SerialParser::ParseSerialInput(char *SerialInput, EventMsg_t *Event
         case KT_RIGHT_JOYSTICK:
             Event->event_type = KT_RIGHT_JOYSTICK;
             Event = GetCoOrdinates(SerialInput, Event);
+            break;
+        case KT_CROSS_BTN:
+            Event->event_type = KT_CROSS_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SQUARE_BTN:
+            Event->event_type = KT_SQUARE_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_TRIANGLE_BTN:
+            Event->event_type = KT_TRIANGLE_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_CIRCLE_BTN:
+            Event->event_type = KT_CIRCLE_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_UP_BTN:
+            Event->event_type = KT_UP_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_RIGHT_BTN:
+            Event->event_type = KT_RIGHT_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_DOWN_BTN:
+            Event->event_type = KT_DOWN_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_LEFT_BTN:
+            Event->event_type = KT_LEFT_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_L1:
+            Event->event_type = KT_SHOULDER_BTN_L1;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_R1:
+            Event->event_type = KT_SHOULDER_BTN_R1;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_L2:
+            Event->event_type = KT_SHOULDER_BTN_L2;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_R2:
+            Event->event_type = KT_SHOULDER_BTN_R2;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_L3:
+            Event->event_type = KT_SHOULDER_BTN_L3;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SHOULDER_BTN_R3:
+            Event->event_type = KT_SHOULDER_BTN_R3;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_SELECT_BTN:
+            Event->event_type = KT_SELECT_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_START_BTN:
+            Event->event_type = KT_START_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
+            break;
+        case KT_PS_BTN:
+            Event->event_type = KT_PS_BTN;
+            Event = GetKeyAnalogValue(SerialInput, Event);
             break;
         default:
             /* No valid tag found, simply skip */

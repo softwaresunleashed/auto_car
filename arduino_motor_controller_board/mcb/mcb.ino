@@ -72,6 +72,30 @@ void PrintEventMsg(EventMsg_t * event)
             Serial.print(" y = ");
             Serial.println(event->more.coordinate.y);
             break;
+        case KT_CROSS_BTN:
+        case KT_SQUARE_BTN:
+        case KT_TRIANGLE_BTN:
+        case KT_CIRCLE_BTN:
+        case KT_UP_BTN:
+        case KT_RIGHT_BTN:
+        case KT_DOWN_BTN:
+        case KT_LEFT_BTN:
+        case KT_SHOULDER_BTN_L1:
+        case KT_SHOULDER_BTN_R1:
+        case KT_SHOULDER_BTN_L2:
+        case KT_SHOULDER_BTN_R2:
+        case KT_SHOULDER_BTN_L3:
+        case KT_SHOULDER_BTN_R3:
+        case KT_SELECT_BTN:
+        case KT_START_BTN:
+        case KT_PS_BTN:
+            Serial.print("Key : ");
+            Serial.print((SerialParser::getInstance())->ConvertKeyTypeToTag(event->event_type));
+            Serial.print("  is_pressed = ");
+            Serial.print(event->more.key.is_pressed);
+            Serial.print(" Analog Value = ");
+            Serial.println(event->more.key.analog_val);
+            break;
         case KT_NONE:    
         default:
             /* No valid tag found, simply skip */
@@ -157,7 +181,7 @@ void SerialParserThread(void *pvParameters)
             uart_buffer_idx = 0;
 
             /* TODO : Delete event_msg after consuming in Motor Controller code */
-            //delete event_msg;
+            
         }
     } /* if(BtSoftwareSerial.available()) ends */
   };  /* while(1) ends */
