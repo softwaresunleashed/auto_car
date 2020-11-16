@@ -13,6 +13,39 @@
 
 
 
+/*================================================ System Queues ================================================*/
+#include "global_queue.h"
+#include "event_msg.h"
+
+void createKeyEventsQueue()
+{
+#if SERIAL_EN
+  Serial.print("-----> Creating Key Event Queue...");
+#endif
+  
+  /* Create Key Event Queue */
+  xKeyEventQueue = xQueueCreate( KEY_EVENT_QUEUE_LEN, sizeof( EventMsg_t ) );
+  if( xKeyEventQueue == 0 )
+  {
+    // Queue was not created and must not be used.
+    #if SERIAL_EN  
+      Serial.println("[Err] Queue couldn't be created...Halting system.");
+    #endif
+  
+    while(1);     // Halt forever
+  }  
+
+#if SERIAL_EN
+  Serial.println("[DONE]");
+#endif
+  
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+
+
+
 
 /*================================================Serial Parser================================================*/
 #include "SerialParser.h"
@@ -110,10 +143,13 @@ void SerialParserThread(void *pvParameters)
             }
 #endif 
 
-            /* Push JoyStick Events to Queues */
+            /* Push JoyStick Events to KeyEvent Queue */
             if(event_msg != NULL)
             {
-                PrintEventMsg(event_msg);
+#if SERIAL_PARSER_DEBUG
+                Serial.print("[SP] "); PrintEventMsg(event_msg);
+#endif
+                xQueueSend(xKeyEventQueue, event_msg, portMAX_DELAY); /* Send key message to Receiver thread */
             }
 
             /* Re-initialize stuff for next serial data input */
@@ -130,10 +166,15 @@ void SerialParserThread(void *pvParameters)
 void initSerialParserThread()
 {
 #if SERIAL_EN
-  Serial.print("Creating Serial Parser Task...");
+  Serial.print("-----> Creating Serial Parser Task...");
 #endif
 
-  xTaskCreate(SerialParserThread, "Serial Parser Thread", SERIALPARSER_THRD_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(SerialParserThread,
+              "Serial Parser Thread",
+              SERIALPARSER_THRD_STACK_SIZE,
+              NULL,
+              SERIALPARSER_THRD_PRIO,
+              NULL);
 
 #if SERIAL_EN
   Serial.println("[Done]");
@@ -142,11 +183,21 @@ void initSerialParserThread()
 /*------------------------------------------------------------------------------------------------------------*/
 
 
+
+
+
 /*================================================Wheel Driver================================================*/
 #include "WheelDriver.h"
-#include "global_queue.h"
+
 
 /* Global Variables */
+
+
+void NavigateWheels(EventMsg_t *event_msg)
+{
+  
+
+}
 
 
 void WheelDriverThread(void *pvParameters)
@@ -155,17 +206,8 @@ void WheelDriverThread(void *pvParameters)
   Serial.println("[WD] Starting Wheel Driver Thread...");
 #endif
 
-  /* Create Queue and wait on it */
-  xKeyEventQueue = xQueueCreate( KEY_EVENT_QUEUE_LEN, sizeof( EventMsg_t ) );
-  if( xKeyEventQueue == 0 )
-  {
-    // Queue was not created and must not be used.
-    #if SERIAL_EN  
-      Serial.println("[WD] [Err] Queue couldn't be created...Halting WheelDriver Thread.");
-    #endif
-  
-    return;
-  }
+    EventMsg_t wd_key_event_msg;
+
 
   /* Get Singleton instance of Wheel Driver */
   WheelDriver *myWheelDriver = WheelDriver::getInstance();
@@ -174,30 +216,60 @@ void WheelDriverThread(void *pvParameters)
   /* Consumer Thread Loop */
   while(1)
   {
-
     /* Wait on a queue and get the event msg */
+    if (xQueueReceive(xKeyEventQueue, &wd_key_event_msg, portMAX_DELAY) == pdPASS) {
+#if SERIAL_EN 
+        Serial.print("[WD] ");
+        PrintEventMsg(&wd_key_event_msg);
+#endif
+        /* Navigate Wheels as per inputs recieved */
+    switch (wd_key_event_msg.event_type) {
+        case KT_BATT_STATUS:
+            /* TBD : Need to decide what to do on Low Battery Status */
+            break;
+        case KT_LEFT_JOYSTICK:
+            /* If x is negative, move left */
+            if(wd_key_event_msg.more.coordinate.x < 0)
+            {
+              Serial.println("[WD] Move Wheels Left...");
+              myWheelDriver->MoveLeft();
+            }
+
+            /* If x is positive, move right */
+            if(wd_key_event_msg.more.coordinate.x > 0)
+            {
+              Serial.println("[WD] Move Wheels Right...");
+              myWheelDriver->MoveRight();
+            }
+            break;
+        case KT_RIGHT_JOYSTICK:
+            /* If y is negative, move Forward */
+            if(wd_key_event_msg.more.coordinate.y < 0)
+            {
+              Serial.println("[WD] Move Wheels Forward...");
+              myWheelDriver->MoveForward();
+            }
+
+            /* If y is positive, move Backward */
+            if(wd_key_event_msg.more.coordinate.y > 0)
+            {
+
+              Serial.println("[WD] Move Wheels Backward...");
+              myWheelDriver->MoveBackward();
+            }
+            break;
+        case KT_NONE:    
+        default:
+            /* No valid tag found, simply skip */
+            Serial.println("Invalid Packet");
+            break;
+    };
 
 
-    /* Send commands to WheelDriver to move vehicle as per input */
-    Serial.println("[WD] Move Wheels Forward...");
-    myWheelDriver->MoveForward();
-
-    delay(2000);
-
-    Serial.println("[WD] Move Wheels Backward...");
-    myWheelDriver->MoveBackward();
-
-    delay(2000);
-  
-    Serial.println("[WD] Move Wheels Left...");
-    myWheelDriver->MoveLeft();
-
-    delay(2000);
-
-    Serial.println("[WD] Move Wheels Right...");
-    myWheelDriver->MoveRight();
-
-    delay(2000);
+        /* Mark previous event as consumed - KT_NONE */
+        wd_key_event_msg.event_type = KT_NONE;
+    }
+    
   };  /* while(1) ends */
 }
 
@@ -205,10 +277,15 @@ void WheelDriverThread(void *pvParameters)
 void initWheelDriverThread()
 {
 #if SERIAL_EN
-  Serial.print("Creating Wheel Driver Task...");
+  Serial.print("-----> Creating Wheel Driver Task...");
 #endif
 
-  xTaskCreate(WheelDriverThread, "Wheel Driver Thread", WHEELDRIVER_THRD_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(WheelDriverThread, 
+              "Wheel Driver Thread",
+              WHEELDRIVER_THRD_STACK_SIZE,
+              NULL,
+              WHEELDRIVER_THR_PRIO,
+              NULL);
 
 #if SERIAL_EN
   Serial.println("[Done]");
@@ -216,11 +293,30 @@ void initWheelDriverThread()
 }
 /*------------------------------------------------------------------------------------------------------------*/
 
-void createSystemThreads()
+void InitSysEnv()
 {
+  /* Initialize Queues */
+#if SERIAL_EN  
+  Serial.println("[SYS] Creating System Queues...");
+#endif
+
+  createKeyEventsQueue();
   
+#if SERIAL_EN 
+  Serial.println("[SYS] Creating System Queues...[DONE]");
+#endif
+
+  /* Threads Go next */
+#if SERIAL_EN  
+  Serial.println("[SYS] Creating System Threads...");
+#endif
+
   initSerialParserThread();   /* Serial Parser Thread */
-  //initWheelDriverThread();    /* Wheel Driver Thread */
+  initWheelDriverThread();    /* Wheel Driver Thread */
+
+#if SERIAL_EN  
+  Serial.println("[SYS] Creating System Threads...[DONE]");
+#endif
 }
 
 
@@ -233,14 +329,16 @@ void setup()
   while (!Serial);
 
   Serial.println("  "); Serial.println("  "); Serial.println("  ");
-  Serial.println("===================================="); 
-  Serial.println("Motor Control Board Setup...[BEGIN]");
-
-  /* Initialize Threads */
-  createSystemThreads();  
-
-  Serial.println("Motor Control Board Setup...[DONE]");
-  Serial.println("===================================="); 
+  Serial.println("============================================");
+  Serial.println("Motor Control Board Initialization...[BEGIN]");
+  Serial.println("============================================");
+  
+  /* Initialize System Environment - Threads, Queues */
+  InitSysEnv();  
+  
+  Serial.println("============================================");
+  Serial.println("Motor Control Board Initialization...[DONE] ");
+  Serial.println("============================================");
 }
 
 

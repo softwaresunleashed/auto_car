@@ -27,34 +27,43 @@ The library has the following known limitations:
 /* Software Serial RX-TX Defines...Refer text above as per your board used */
 #if (CURRENT_BOARD == UNO)          /* Arduino UNO Configuration */
   #warning "CURRENT_BOARD is Arduino Uno"
-  #define ARDUINO_RX_PIN  2
-  #define ARDUINO_TX_PIN  3
+  #define ARDUINO_RX_PIN    2
+  #define ARDUINO_TX_PIN    3
 #elif (CURRENT_BOARD == MEGA)    /* Arduino MEGA Configuration */
   #warning "CURRENT_BOARD is Arduino Mega"
-  #define ARDUINO_RX_PIN  69  //A15
-  #define ARDUINO_TX_PIN  3
+  #define ARDUINO_RX_PIN    69  //A15
+  #define ARDUINO_TX_PIN    3
 #else
   #error "Select Board by defining CURRENT_BOARD in configuration.h"
 #endif
 
 /* Wheel Driver */
-#define INITIAL_SPEED     200
-
+#define INITIAL_SPEED       200
+/* Wheel Driver - END */
 
 /* UART Defines */
 #define BAUDRATE            115200
 #define UART_BUFFER_LEN     200      /* Fix : In some cases when corrupted line is recieved on a serial connection, its lenght is 20+, so keeping a safe value */
+/* UART Defines - END */
+
 
 /* FreeRTOS */
-#define SERIALPARSER_THRD_STACK_SIZE   300   //128
-#define WHEELDRIVER_THRD_STACK_SIZE    300   //128
+#define SERIALPARSER_THRD_PRIO         1
+#define WHEELDRIVER_THR_PRIO           1
 
+#define SERIALPARSER_THRD_STACK_SIZE   300    // words 
+#define WHEELDRIVER_THRD_STACK_SIZE    300    // words
+/* FreeRTOS - END */
 
 /* Debug Flags */
-#define SERIAL_EN           1
-#define MOTOR_CONTROL_EN    0
-#define OLED_SUPPORTED      0
-#define PROXIMITY_RADAR_EN  0
-#define SERIAL_PARSER_DEBUG 1
+#define SERIAL_EN             1
+#define MOTOR_CONTROL_EN      0
+#define OLED_SUPPORTED        0
+#define PROXIMITY_RADAR_EN    0
+#define SERIAL_PARSER_DEBUG   0
+#define VERBOSE_DEBUG         0
+/* Debug Flags - END */
+
+
 
 #endif  /* __CONFIGURATION_H_ */
