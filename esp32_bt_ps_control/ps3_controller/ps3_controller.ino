@@ -18,25 +18,538 @@ void notify()
 {
 
     //---------------- Analog stick value events ---------------
-   if( abs(Ps3.event.analog_changed.stick.lx) + abs(Ps3.event.analog_changed.stick.ly) > 2 ){
+   if( abs(Ps3.event.analog_changed.stick.lx) + abs(Ps3.event.analog_changed.stick.ly) > 2 )
+   {
        Serial.print(LEFT_JOYSTICK);
        
-       Serial.print(":");
+       Serial.print(DELIMITER_TAG);
        Serial.print(Ps3.data.analog.stick.lx, DEC);
-       Serial.print(","); 
+       Serial.print(DELIMITER_COORDINATE); 
        Serial.print(Ps3.data.analog.stick.ly, DEC);
        
        Serial.println();
     }
 
-   if( abs(Ps3.event.analog_changed.stick.rx) + abs(Ps3.event.analog_changed.stick.ry) > 2 ){
+   if( abs(Ps3.event.analog_changed.stick.rx) + abs(Ps3.event.analog_changed.stick.ry) > 2 )
+   {
         Serial.print(RIGHT_JOYSTICK);
         
-        Serial.print(":");
+        Serial.print(DELIMITER_TAG);
         Serial.print(Ps3.data.analog.stick.rx, DEC);
-        Serial.print(","); 
+        Serial.print(DELIMITER_COORDINATE); 
         Serial.print(Ps3.data.analog.stick.ry, DEC);
 
+        Serial.println();
+   }
+
+    //--- Digital cross/square/triangle/circle button events ---
+    if( Ps3.event.button_down.cross )
+    {     
+        Serial.print(CROSS_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+
+        Serial.println();
+    }
+    
+    if( Ps3.event.button_up.cross )
+    {
+        Serial.print(CROSS_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.square )
+    {
+        Serial.print(SQUARE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.square )
+    {
+        Serial.print(SQUARE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.triangle )
+    {
+        Serial.print(TRIANGLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.triangle )
+    {
+        Serial.print(TRIANGLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.circle )
+    {
+        Serial.print(CIRCLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.circle )
+    {
+        Serial.print(CIRCLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    
+    //--------------- Digital D-pad button events --------------
+    if( Ps3.event.button_down.up )
+    {
+        Serial.print(UP_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MAX_ANALOG_VALUE);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.up )
+    {
+        Serial.print(UP_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MIN_ANALOG_VALUE); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.right )
+    {
+        Serial.print(RIGHT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MAX_ANALOG_VALUE);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.right )
+    {
+        Serial.print(RIGHT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MIN_ANALOG_VALUE); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.down )
+    {
+        Serial.print(DOWN_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MAX_ANALOG_VALUE);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.down )
+    {
+        Serial.print(DOWN_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MIN_ANALOG_VALUE); 
+                
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.left )
+    {
+        Serial.print(LEFT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MAX_ANALOG_VALUE);
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.left )
+    {
+        Serial.print(LEFT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(MIN_ANALOG_VALUE); 
+        
+        Serial.println();
+    }
+
+    //------------- Digital shoulder button events -------------
+    if( Ps3.event.button_down.l1 )
+    {
+        Serial.print(SHOULDER_BTN_L1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.l1 )
+    {
+        Serial.print(SHOULDER_BTN_L1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.r1 )
+    {
+        Serial.print(SHOULDER_BTN_R1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.r1 )
+    {
+        Serial.print(SHOULDER_BTN_R1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+        
+        Serial.println();
+    }
+
+    //-------------- Digital trigger button events -------------
+    if( Ps3.event.button_down.l2 )
+    {
+        Serial.print(SHOULDER_BTN_L2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.l2 )
+    {
+        Serial.print(SHOULDER_BTN_L2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.r2 )
+    {
+        Serial.print(SHOULDER_BTN_R2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.r2 )
+    {
+        Serial.print(SHOULDER_BTN_R2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    
+    //--------------- Digital stick button events --------------
+    if( Ps3.event.button_down.l3 )
+    {
+        Serial.print(SHOULDER_BTN_L3);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.l3 )
+    {
+        Serial.print(SHOULDER_BTN_L3);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_down.r3 )
+    {
+        Serial.print(SHOULDER_BTN_R3);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+
+    if( Ps3.event.button_up.r3 )
+    {
+        Serial.print(SHOULDER_BTN_R1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    //---------- Digital select/start/ps button events ---------
+    if( Ps3.event.button_down.select )
+    {
+        Serial.print(SELECT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+    
+    if( Ps3.event.button_up.select )
+    {
+        Serial.print(SELECT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+    
+    /* Start Button */
+    if( Ps3.event.button_down.start )
+    {
+        Serial.print(START_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+    
+    if( Ps3.event.button_up.start )
+    {
+        Serial.print(START_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+    /* PS Button */
+    if( Ps3.event.button_down.ps )
+    {
+        Serial.print(PS_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED); 
+
+        Serial.println();
+    }
+    
+    if( Ps3.event.button_up.ps )
+    {
+        Serial.print(PS_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_RELEASED); 
+
+        Serial.println();
+    }
+
+
+   //--------------- Analog D-pad button events ----------------
+   if( abs(Ps3.event.analog_changed.button.up) )
+   {
+        Serial.print(UP_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.up, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.right) )
+   {
+        Serial.print(RIGHT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.right, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.down) )
+   {
+        Serial.print(DOWN_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.down, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.left) )
+   {
+        Serial.print(LEFT_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.left, DEC);
+
+        Serial.println();
+   }
+
+   //---------- Analog shoulder/trigger button events ----------
+   if( abs(Ps3.event.analog_changed.button.l1)){
+        Serial.print(SHOULDER_BTN_L1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.l1, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.r1) ){
+        Serial.print(SHOULDER_BTN_R1);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.r1, DEC);
+
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.l2) ){
+        Serial.print(SHOULDER_BTN_L2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.l2, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.r2) ){
+        Serial.print(SHOULDER_BTN_R2);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.r2, DEC);
+        
+        Serial.println();
+   }
+
+
+   //---- Analog cross/square/triangle/circle button events ----
+   if( abs(Ps3.event.analog_changed.button.triangle))
+   {
+        Serial.print(TRIANGLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.triangle, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.circle) )
+   {
+        Serial.print(CIRCLE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.circle, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.cross) )
+   {
+        Serial.print(CROSS_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.cross, DEC);
+        
+        Serial.println();
+   }
+
+   if( abs(Ps3.event.analog_changed.button.square) )
+   {
+        Serial.print(SQUARE_BTN);
+        
+        Serial.print(DELIMITER_TAG);
+        Serial.print(KS_PRESSED);
+        Serial.print(DELIMITER_ANALOG_VAL);
+        Serial.println(Ps3.data.analog.button.square, DEC);
+        
         Serial.println();
    }
 
@@ -45,7 +558,7 @@ void notify()
     if( battery != Ps3.data.status.battery ){
         battery = Ps3.data.status.battery;
         Serial.print(BATT_STATUS);
-        Serial.print(":");
+        Serial.print(DELIMITER_TAG);
         
         if( battery == ps3_status_battery_charging )      Serial.println( BATT_CHARGING );
         else if( battery == ps3_status_battery_full )     Serial.println( BATT_FULL );
@@ -85,7 +598,9 @@ void loop()
     Ps3.setPlayer(player);
 
     player += 1;
-    if(player > 10) player = 0;
+    if(player > 10) {
+      player = 0;
+    }
 
 
     //------ Digital cross/square/triangle/circle buttons ------
