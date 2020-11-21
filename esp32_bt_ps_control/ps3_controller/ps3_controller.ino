@@ -133,8 +133,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(MAX_ANALOG_VALUE);
-
-        Serial.println();
     }
 
     if( Ps3.event.button_up.up )
@@ -144,9 +142,7 @@ void notify()
         Serial.print(DELIMITER_TAG);
         Serial.print(KS_RELEASED);
         Serial.print(DELIMITER_ANALOG_VAL);
-        Serial.println(MIN_ANALOG_VALUE); 
-
-        Serial.println();
+        Serial.println(MIN_ANALOG_VALUE);
     }
 
     if( Ps3.event.button_down.right )
@@ -157,8 +153,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(MAX_ANALOG_VALUE);
-
-        Serial.println();
     }
 
     if( Ps3.event.button_up.right )
@@ -168,9 +162,7 @@ void notify()
         Serial.print(DELIMITER_TAG);
         Serial.print(KS_RELEASED);
         Serial.print(DELIMITER_ANALOG_VAL);
-        Serial.println(MIN_ANALOG_VALUE); 
-
-        Serial.println();
+        Serial.println(MIN_ANALOG_VALUE);
     }
 
     if( Ps3.event.button_down.down )
@@ -181,8 +173,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(MAX_ANALOG_VALUE);
-
-        Serial.println();
     }
 
     if( Ps3.event.button_up.down )
@@ -192,9 +182,7 @@ void notify()
         Serial.print(DELIMITER_TAG);
         Serial.print(KS_RELEASED); 
         Serial.print(DELIMITER_ANALOG_VAL);
-        Serial.println(MIN_ANALOG_VALUE); 
-                
-        Serial.println();
+        Serial.println(MIN_ANALOG_VALUE);
     }
 
     if( Ps3.event.button_down.left )
@@ -205,8 +193,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(MAX_ANALOG_VALUE);
-
-        Serial.println();
     }
 
     if( Ps3.event.button_up.left )
@@ -216,9 +202,7 @@ void notify()
         Serial.print(DELIMITER_TAG);
         Serial.print(KS_RELEASED); 
         Serial.print(DELIMITER_ANALOG_VAL);
-        Serial.println(MIN_ANALOG_VALUE); 
-        
-        Serial.println();
+        Serial.println(MIN_ANALOG_VALUE);
     }
 
     //------------- Digital shoulder button events -------------
@@ -418,8 +402,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.up, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.right) )
@@ -430,8 +412,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.right, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.down) )
@@ -442,8 +422,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.down, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.left) )
@@ -454,8 +432,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.left, DEC);
-
-        Serial.println();
    }
 
    //---------- Analog shoulder/trigger button events ----------
@@ -466,8 +442,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.l1, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.r1) ){
@@ -477,8 +451,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.r1, DEC);
-
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.l2) ){
@@ -488,8 +460,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.l2, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.r2) ){
@@ -499,8 +469,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.r2, DEC);
-        
-        Serial.println();
    }
 
 
@@ -513,8 +481,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.triangle, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.circle) )
@@ -525,8 +491,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.circle, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.cross) )
@@ -537,8 +501,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.cross, DEC);
-        
-        Serial.println();
    }
 
    if( abs(Ps3.event.analog_changed.button.square) )
@@ -549,8 +511,6 @@ void notify()
         Serial.print(KS_PRESSED);
         Serial.print(DELIMITER_ANALOG_VAL);
         Serial.println(Ps3.data.analog.button.square, DEC);
-        
-        Serial.println();
    }
 
 
