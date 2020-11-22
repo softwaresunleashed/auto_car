@@ -124,9 +124,6 @@ void SerialParserThread(void *pvParameters)
   while(1)
   {
     char read_char = 0;
-    
-    /* Start with a clean event - everytime!! */
-    memset(event_msg, 0, sizeof(EventMsg_t));
 
     
     /* If there is something to read on BT Serial Port, print it on serial port */
@@ -151,9 +148,10 @@ void SerialParserThread(void *pvParameters)
             /* Line ending occured, parsed the data */
             uart_buffer[uart_buffer_idx] = '\0';    /* NULL terminate the string */
 
-#if SERIAL_PARSER_DEBUG
-            Serial.print("["); Serial.print(uart_buffer); Serial.println("]");
+#if VERBOSE_DEBUG
+            Serial.print("Plain Text from Software Serial --------------------> ["); Serial.print(uart_buffer); Serial.println("]");
 #endif 
+
             /* Parse UART buffer and make a EventMsg to post to Motor Controller thread */
             event_msg = mySerialParser->ParseSerialInput(uart_buffer, event_msg);
 
@@ -174,6 +172,9 @@ void SerialParserThread(void *pvParameters)
                 Serial.print("[SP] "); PrintEventMsg(event_msg);
 #endif
                 xQueueSend(xKeyEventQueue, event_msg, portMAX_DELAY); /* Send key message to Receiver thread */
+
+                /* Start with a clean event - everytime!! */
+                memset(event_msg, 0, sizeof(EventMsg_t));
             }
 
             /* Re-initialize stuff for next serial data input */
@@ -189,7 +190,7 @@ void SerialParserThread(void *pvParameters)
 
 void initSerialParserThread()
 {
-#if SERIAL_EN
+#if SYS_BOOT_MSGS
   Serial.print("-----> Creating Serial Parser Task...");
 #endif
 
@@ -200,7 +201,7 @@ void initSerialParserThread()
               SERIALPARSER_THRD_PRIO,
               NULL);
 
-#if SERIAL_EN
+#if SYS_BOOT_MSGS
   Serial.println("[Done]");
 #endif  
 }
@@ -226,7 +227,7 @@ void NavigateWheels(EventMsg_t *event_msg)
 
 void WheelDriverThread(void *pvParameters)
 {
-#if SERIAL_EN  
+#if SYS_BOOT_MSGS
   Serial.println("[WD] Starting Wheel Driver Thread...");
 #endif
 
@@ -282,10 +283,15 @@ void WheelDriverThread(void *pvParameters)
               myWheelDriver->MoveBackward();
             }
             break;
+        case KT_CROSS_BTN:
+            /* Emergency Brake */
+            Serial.println("Emergency Brake");
+            myWheelDriver->Halt();
+            break;
         case KT_NONE:    
         default:
             /* No valid tag found, simply skip */
-            Serial.println("Invalid Packet");
+            Serial.println("Wheel Driver Thread - Invalid Packet");
             break;
     };
 
@@ -300,7 +306,7 @@ void WheelDriverThread(void *pvParameters)
 
 void initWheelDriverThread()
 {
-#if SERIAL_EN
+#if SYS_BOOT_MSGS
   Serial.print("-----> Creating Wheel Driver Task...");
 #endif
 
@@ -311,7 +317,7 @@ void initWheelDriverThread()
               WHEELDRIVER_THR_PRIO,
               NULL);
 
-#if SERIAL_EN
+#if SYS_BOOT_MSGS
   Serial.println("[Done]");
 #endif  
 }
@@ -320,25 +326,25 @@ void initWheelDriverThread()
 void InitSysEnv()
 {
   /* Initialize Queues */
-#if SERIAL_EN  
+#if SYS_BOOT_MSGS
   Serial.println("[SYS] Creating System Queues...");
 #endif
 
   createKeyEventsQueue();
   
-#if SERIAL_EN 
+#if SYS_BOOT_MSGS
   Serial.println("[SYS] Creating System Queues...[DONE]");
 #endif
 
   /* Threads Go next */
-#if SERIAL_EN  
+#if SYS_BOOT_MSGS
   Serial.println("[SYS] Creating System Threads...");
 #endif
 
   initSerialParserThread();   /* Serial Parser Thread */
   initWheelDriverThread();    /* Wheel Driver Thread */
 
-#if SERIAL_EN  
+#if SYS_BOOT_MSGS
   Serial.println("[SYS] Creating System Threads...[DONE]");
 #endif
 }

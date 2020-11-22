@@ -57,11 +57,12 @@ The library has the following known limitations:
 
 /* Debug Flags */
 #define SERIAL_EN             1
+#define SYS_BOOT_MSGS         1
 #define MOTOR_CONTROL_EN      0
 #define OLED_SUPPORTED        0
 #define PROXIMITY_RADAR_EN    0
 #define SERIAL_PARSER_DEBUG   0
-#define VERBOSE_DEBUG         0
+#define VERBOSE_DEBUG         1
 /* Debug Flags - END */
 
 
